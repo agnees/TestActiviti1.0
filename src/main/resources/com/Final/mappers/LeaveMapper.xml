@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Final.dao.LeaveDao">
+
+    <resultMap type="Leave" id="LeaveResult">
+        <result property="id" column="id"/>
+        <result property="leaveDate" column="leaveDate"/>
+        <result property="leaveDays" column="leaveDays"/>
+        <result property="leaveReason" column="leaveReason"/>
+        <result property="state" column="state"/>
+        <result property="processInstanceId" column="processInstanceId"/>
+        <association property="user" column="userId" select="com.Final.dao.UserDao.findById"/>
+    </resultMap>
+
+    <select id="findById" parameterType="Integer" resultMap="LeaveResult">
+        select * from t_leave where id=#{id}
+    </select>
+
+    <insert id="add" parameterType="Leave" >
+        insert into t_leave values(null,#{user.id},#{leaveDate},#{leaveDays},#{leaveReason},#{state},#{processInstanceId});
+    </insert>
+
+    <update id="update" parameterType="Leave">
+        UPDATE  t_leave
+        <set>
+            <if test="state!=null and state!=''">
+                state = #{state},
+            </if>
+            <if test="processInstanceId!=null and processInstanceId!=''">
+                processInstanceId=#{processInstanceId},
+            </if>
+        </set>
+        WHERE  id=#{id}
+    </update>
+    
+    <select id="find" parameterType="Map" resultMap="LeaveResult">
+        SELECT  * FROM  t_leave
+        <where>
+            <if test="userId!=null and userId!=''">
+                and userId = #{userId}
+            </if>
+
+        </where>
+        order by leaveDate desc
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+
+    </select>
+
+    <select id="getTotal" parameterType="Map" resultType="Long">
+        SELECT COUNT(*)  from t_leave
+        <where>
+            <if test="userId!=null and userId!='' ">
+                and userId = #{userId}
+            </if>
+        </where>
+
+    </select>
+
+
+</mapper>

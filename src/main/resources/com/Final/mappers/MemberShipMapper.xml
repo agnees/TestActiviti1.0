@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Final.dao.MemberShipDao">
+    <resultMap type="MemberShip" id="MemberShipResult">
+        <association property="user" column="user_id_" select="com.Final.dao.UserDao.findById"/>
+        <association property="group" column="group_id_" select="com.Final.dao.GroupDao.findById"/>
+    </resultMap>
+
+    <select id="login" parameterType="Map" resultMap="MemberShipResult">
+        SELECT ms.user_id_ AS user_id_ ,ms.group_id_ AS group_id_ FROM act_id_user AS u,act_id_group AS g,act_id_membership AS ms WHERE ms.user_id_=u.id_ AND ms.group_id_=g.id_ AND u.id_=#{userName} AND u.pwd_=#{password} AND g.id_=#{groupId};
+    </select>
+
+
+    <delete id="deletAllGroupsById" parameterType="String">
+        delete from act_id_membership where user_id_=#{userId};
+    </delete>
+
+    <insert id="add" parameterType="MemberShip">
+        insert into act_id_membership values(#{user.id},#{group.id});
+    </insert>
+
+</mapper>
