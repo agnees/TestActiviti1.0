@@ -1,0 +1,2 @@
+# TestActiviti1.0
+该系统是基于Activiti5工作流引擎采用了SSM+Mysql实现的一个学生请假系统
